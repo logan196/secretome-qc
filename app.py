@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import base64
+
 import pandas as pd
 import streamlit as st
 
@@ -28,11 +30,15 @@ def verdict_class(verdict: str) -> str:
     return {"PASS": "pass", "REVIEW": "review", "FAIL": "fail"}.get(verdict, "review")
 
 
+def _svg_img(path, alt: str) -> str:
+    payload = base64.b64encode(path.read_bytes()).decode("ascii")
+    return f'<img src="data:image/svg+xml;base64,{payload}" alt="{alt}"/>'
+
+
 def render_header() -> None:
-    nova = (ASSETS_DIR / "novaflow.svg").read_text()
-    nove = (ASSETS_DIR / "noveome.svg").read_text()
-    st.markdown(
-        f"""
+    nova = _svg_img(ASSETS_DIR / "novaflow.svg", "Novaflow")
+    nove = _svg_img(ASSETS_DIR / "noveome.svg", "Noveome")
+    html = f"""
         <div class="sqc-header">
           <div class="sqc-brands">
             {nova}
@@ -45,9 +51,21 @@ def render_header() -> None:
           </div>
           <div class="sqc-badge">DEMO / PUBLIC DATA READY</div>
         </div>
-        """,
-        unsafe_allow_html=True,
-    )
+        """
+    # st.html avoids Streamlit markdown escaping inline SVG / extra markup.
+    if hasattr(st, "html"):
+        st.html(html)
+    else:
+        brand, title, badge = st.columns([2.2, 3.4, 1.6])
+        with brand:
+            left, right = st.columns(2)
+            left.image(str(ASSETS_DIR / "novaflow.svg"))
+            right.image(str(ASSETS_DIR / "noveome.svg"))
+        with title:
+            st.markdown("### SecretomeQC")
+            st.caption("Self-serve lot comparability + pathway MoA explorer for ST-266-style secretomes")
+        with badge:
+            st.markdown('<div class="sqc-badge">DEMO / PUBLIC DATA READY</div>', unsafe_allow_html=True)
 
 
 def load_data(mode: str, upload) -> tuple:
@@ -136,13 +154,10 @@ def main() -> None:
             f'<div class="sqc-verdict {verdict_class(qc.verdict)}">{qc.verdict} — {qc.verdict_detail}</div>',
             unsafe_allow_html=True,
         )
-        st.dataframe(
-            qc.lot_summary.style.format(
-                {"median_within_lot_cv_pct": "{:.2f}", "pct_proteins_cv_le_pass": "{:.1f}"}
-            ),
-            use_container_width=True,
-            hide_index=True,
-        )
+        lot_view = qc.lot_summary.copy()
+        lot_view["median_within_lot_cv_pct"] = lot_view["median_within_lot_cv_pct"].map(lambda x: f"{x:.2f}")
+        lot_view["pct_proteins_cv_le_pass"] = lot_view["pct_proteins_cv_le_pass"].map(lambda x: f"{x:.1f}")
+        st.dataframe(lot_view, use_container_width=True, hide_index=True)
         st.plotly_chart(cv_fig, use_container_width=True)
         with st.expander("Full protein CV table"):
             pretty = qc.protein_table.copy()

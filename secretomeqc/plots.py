@@ -18,7 +18,7 @@ def _apply_layout(fig: go.Figure, title: str) -> go.Figure:
 
 def cv_figure(qc: QCResult) -> go.Figure:
     table = qc.protein_table.dropna(subset=["between_lot_cv_pct"]).copy()
-    table = table.sort_values("between_lot_cv_pct").tail(40)
+    table = table.sort_values("between_lot_cv_pct").tail(25)
     color_map = {"PASS": "#047857", "REVIEW": "#B45309", "FAIL": "#B91C1C", "NA": "#64748B"}
     fig = px.bar(
         table,
@@ -31,7 +31,7 @@ def cv_figure(qc: QCResult) -> go.Figure:
     )
     fig.update_traces(marker_line_width=0)
     fig.update_layout(height=max(420, 16 * len(table)), yaxis={"categoryorder": "total ascending"})
-    return _apply_layout(fig, "Lot-to-lot CV by protein (highest 40)")
+    return _apply_layout(fig, "Lot-to-lot CV by protein (highest 25)")
 
 
 def pca_figure(pca: PCAResult) -> go.Figure:
@@ -40,10 +40,10 @@ def pca_figure(pca: PCAResult) -> go.Figure:
         x="pc1",
         y="pc2",
         color="lot",
-        text="sample",
+        hover_name="sample",
         color_discrete_map=LOT_COLORS,
     )
-    fig.update_traces(marker=dict(size=14, line=dict(width=1, color="white")), textposition="top center")
+    fig.update_traces(marker=dict(size=16, line=dict(width=1, color="white")))
     fig.update_layout(
         height=460,
         xaxis_title=f"PC1 ({pca.variance[0]:.1f}%)",
