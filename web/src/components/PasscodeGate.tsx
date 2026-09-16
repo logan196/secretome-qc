@@ -62,9 +62,9 @@ export function PasscodeGate({ onUnlock }: PasscodeGateProps) {
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           className="mb-10 flex items-center justify-center gap-5"
         >
-          <BrandMark name="novaflow" invert className="h-7 w-auto" />
+          <BrandMark name="novaflow" tone="light" className="h-8 w-auto" />
           <div className="h-6 w-px bg-white/20" />
-          <BrandMark name="noveome" invert className="h-7 w-auto" />
+          <BrandMark name="noveome" tone="light" className="h-8 w-auto" />
         </motion.div>
 
         <motion.section

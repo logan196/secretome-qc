@@ -27,6 +27,108 @@ type DashboardProps = {
   onLock: () => void;
 };
 
+type RailProps = {
+  source: "demo" | "upload";
+  passCv: number;
+  reviewCv: number;
+  fileName: string;
+  error: string;
+  radioName: string;
+  onBundled: () => void;
+  onUploadMode: () => void;
+  onUpload: (file: File | undefined) => void;
+  onPassCv: (value: number) => void;
+  onReviewCv: (value: number) => void;
+  onReport: () => void;
+  onLock: () => void;
+};
+
+function RailControls({
+  source,
+  passCv,
+  reviewCv,
+  fileName,
+  error,
+  radioName,
+  onBundled,
+  onUploadMode,
+  onUpload,
+  onPassCv,
+  onReviewCv,
+  onReport,
+  onLock,
+}: RailProps) {
+  return (
+    <>
+      <p className="mt-6 text-[11px] font-semibold uppercase tracking-[0.2em] text-teal-200/70">Data</p>
+      <div className="mt-3 space-y-2 text-sm">
+        <label className="flex items-center gap-2">
+          <input type="radio" name={radioName} checked={source === "demo"} onChange={onBundled} />
+          Bundled DEMO / PUBLIC
+        </label>
+        <label className="flex items-center gap-2">
+          <input type="radio" name={radioName} checked={source === "upload"} onChange={onUploadMode} />
+          Upload wide CSV
+        </label>
+      </div>
+      <label className="mt-4 block rounded-2xl border border-dashed border-white/20 bg-white/5 px-3 py-4 text-xs leading-5 text-cyan-100/70">
+        CSV: gene + LotA_rep1 columns. Lines starting with # are ignored.
+        <input
+          type="file"
+          accept=".csv,text/csv"
+          className="mt-3 block w-full text-xs text-cyan-50"
+          onChange={(event) => onUpload(event.target.files?.[0])}
+        />
+      </label>
+      {fileName ? <p className="mt-2 text-xs text-teal-200">Loaded {fileName}</p> : null}
+      {error ? <p className="mt-2 text-xs text-rose-300">{error}</p> : null}
+
+      <p className="mt-8 text-[11px] font-semibold uppercase tracking-[0.2em] text-teal-200/70">QC thresholds</p>
+      <label className="mt-4 block text-xs">
+        Pass if lot-to-lot CV ≤ {passCv.toFixed(0)}%
+        <input
+          type="range"
+          min={5}
+          max={40}
+          value={passCv}
+          onChange={(event) => onPassCv(Number(event.target.value))}
+          className="mt-2 w-full"
+        />
+      </label>
+      <label className="mt-4 block text-xs">
+        Review if lot-to-lot CV ≤ {Math.max(reviewCv, passCv).toFixed(0)}%
+        <input
+          type="range"
+          min={10}
+          max={60}
+          value={reviewCv}
+          onChange={(event) => onReviewCv(Number(event.target.value))}
+          className="mt-2 w-full"
+        />
+      </label>
+
+      <button
+        type="button"
+        onClick={onReport}
+        className="mt-8 w-full rounded-2xl bg-gradient-to-r from-teal-300 to-indigo-300 px-4 py-3 text-sm font-semibold text-slate-950"
+      >
+        Download branded HTML report
+      </button>
+      <button
+        type="button"
+        onClick={onLock}
+        className="mt-3 w-full rounded-2xl border border-white/15 px-4 py-2 text-xs font-semibold text-cyan-100/80"
+      >
+        Lock workbench
+      </button>
+      <p className="mt-6 text-[11px] leading-5 text-cyan-100/45">
+        Demo matrix is synthetic-but-realistic extracellular proteomics, labeled DEMO / PUBLIC DATA.
+        Phase 2: FragPipe / quantms + real Orbitrap post-NDA.
+      </p>
+    </>
+  );
+}
+
 export function Dashboard({ onLock }: DashboardProps) {
   const [source, setSource] = useState<"demo" | "upload">("demo");
   const [uploaded, setUploaded] = useState<AnalysisResult | null>(null);
@@ -64,89 +166,38 @@ export function Dashboard({ onLock }: DashboardProps) {
     setError("");
   }
 
+  const rail = {
+    source,
+    passCv,
+    reviewCv,
+    fileName,
+    error,
+    onBundled: useBundled,
+    onUploadMode: () => setSource("upload"),
+    onUpload: handleUpload,
+    onPassCv: setPassCv,
+    onReviewCv: setReviewCv,
+    onReport: () => downloadReport(result),
+    onLock,
+  };
+
   return (
     <div className="workbench-bg min-h-screen lg:grid lg:grid-cols-[280px_1fr]">
       <aside className="bg-[var(--navy-2)] px-5 py-6 text-cyan-50 lg:min-h-screen">
         <div className="flex items-center gap-3">
-          <BrandMark name="novaflow" invert className="h-6 w-auto" />
+          <BrandMark name="novaflow" tone="light" className="h-7 w-auto" />
           <div className="h-5 w-px bg-white/20" />
-          <BrandMark name="noveome" invert className="h-6 w-auto" />
+          <BrandMark name="noveome" tone="light" className="h-7 w-auto" />
         </div>
-        <p className="mt-6 text-[11px] font-semibold uppercase tracking-[0.2em] text-teal-200/70">Data</p>
-        <div className="mt-3 space-y-2 text-sm">
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              name="source"
-              checked={source === "demo"}
-              onChange={useBundled}
-            />
-            Bundled DEMO / PUBLIC
-          </label>
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              name="source"
-              checked={source === "upload"}
-              onChange={() => setSource("upload")}
-            />
-            Upload wide CSV
-          </label>
+        <details className="lg:hidden">
+          <summary className="mt-5 cursor-pointer text-[11px] font-semibold uppercase tracking-[0.2em] text-teal-200/70">
+            Data &amp; thresholds
+          </summary>
+          <RailControls {...rail} radioName="source-mobile" />
+        </details>
+        <div className="hidden lg:block">
+          <RailControls {...rail} radioName="source-desktop" />
         </div>
-        <label className="mt-4 block rounded-2xl border border-dashed border-white/20 bg-white/5 px-3 py-4 text-xs leading-5 text-cyan-100/70">
-          CSV: gene + LotA_rep1 columns. Lines starting with # are ignored.
-          <input
-            type="file"
-            accept=".csv,text/csv"
-            className="mt-3 block w-full text-xs text-cyan-50"
-            onChange={(event) => handleUpload(event.target.files?.[0])}
-          />
-        </label>
-        {fileName ? <p className="mt-2 text-xs text-teal-200">Loaded {fileName}</p> : null}
-        {error ? <p className="mt-2 text-xs text-rose-300">{error}</p> : null}
-
-        <p className="mt-8 text-[11px] font-semibold uppercase tracking-[0.2em] text-teal-200/70">QC thresholds</p>
-        <label className="mt-4 block text-xs">
-          Pass if lot-to-lot CV ≤ {passCv.toFixed(0)}%
-          <input
-            type="range"
-            min={5}
-            max={40}
-            value={passCv}
-            onChange={(event) => setPassCv(Number(event.target.value))}
-            className="mt-2 w-full"
-          />
-        </label>
-        <label className="mt-4 block text-xs">
-          Review if lot-to-lot CV ≤ {Math.max(reviewCv, passCv).toFixed(0)}%
-          <input
-            type="range"
-            min={10}
-            max={60}
-            value={reviewCv}
-            onChange={(event) => setReviewCv(Number(event.target.value))}
-            className="mt-2 w-full"
-          />
-        </label>
-
-        <button
-          type="button"
-          onClick={() => downloadReport(result)}
-          className="mt-8 w-full rounded-2xl bg-gradient-to-r from-teal-300 to-indigo-300 px-4 py-3 text-sm font-semibold text-slate-950"
-        >
-          Download branded HTML report
-        </button>
-        <button
-          type="button"
-          onClick={onLock}
-          className="mt-3 w-full rounded-2xl border border-white/15 px-4 py-2 text-xs font-semibold text-cyan-100/80"
-        >
-          Lock workbench
-        </button>
-        <p className="mt-6 text-[11px] leading-5 text-cyan-100/45">
-          Demo matrix is synthetic-but-realistic extracellular proteomics, labeled DEMO / PUBLIC DATA.
-          Phase 2: FragPipe / quantms + real Orbitrap post-NDA.
-        </p>
       </aside>
 
       <main className="px-4 py-6 sm:px-8">

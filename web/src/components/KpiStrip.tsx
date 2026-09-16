@@ -69,7 +69,7 @@ export function KpiStrip({ result }: { result: AnalysisResult }) {
           <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
             {card.label}
           </p>
-          <p className="mt-2 text-3xl font-semibold tracking-tight text-[var(--ink)]">{card.value}</p>
+          <p className="font-serif mt-2 text-3xl font-semibold tracking-tight text-[var(--ink)]">{card.value}</p>
           <p className="mt-1 text-xs text-[var(--muted)]">{card.hint}</p>
         </motion.article>
       ))}
