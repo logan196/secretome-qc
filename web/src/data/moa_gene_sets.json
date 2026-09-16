@@ -1,0 +1,29 @@
+{
+  "anti-inflammatory": {
+    "description": "Secreted mediators that dampen innate inflammation and protease-driven tissue damage (ST-266 / amnion secretome literature).",
+    "genes": [
+      "IL1RN", "IL10", "TGFB1", "TGFB2", "TIMP1", "TIMP2", "SERPINA1", "SERPINE1",
+      "ANXA1", "MIF", "DPP4", "TNFRSF1A", "TNFRSF1B", "IL1R2", "SOCS3", "CLU",
+      "A2M", "C3", "CFH", "LGALS1", "LGALS3", "S100A8", "S100A9", "IL4", "IL13",
+      "LIF", "OSM", "CXCL12", "PEA15", "HMOX1"
+    ]
+  },
+  "neuroprotective": {
+    "description": "Growth factors and guidance cues linked to RGC / CNS protection in published ST-266 and AMP-cell secretome studies.",
+    "genes": [
+      "FGF2", "GDNF", "NRG1", "BDNF", "NGF", "CNTF", "NTF3", "VEGFA", "IGF1",
+      "GDF15", "FGF1", "FGF7", "HGF", "PDGFA", "PDGFB", "ANG", "AREG", "PGF",
+      "ANGPT1", "NRP1", "NRP2", "MET", "EGFR", "ERBB3", "SPARC", "DCN", "TGFB1",
+      "IGF2", "CXCL12", "SERPINE1"
+    ]
+  },
+  "anti-apoptotic": {
+    "description": "Soluble receptors, TIMPs and survival factors reported in AMP-cell secretome / anti-apoptotic pathway annotations.",
+    "genes": [
+      "TIMP1", "AXL", "TNFRSF1A", "IGF1", "VEGFA", "FGF2", "SERPINB2", "CLU",
+      "HSPB1", "HSPA8", "HSP90AA1", "PEA15", "CFLAR", "TNFSF10", "FAS",
+      "SOD1", "SOD2", "PRDX1", "TXN", "GSTP1", "PARK7", "ANXA5", "B2M",
+      "SERPINA1", "A2M", "HMOX1", "CAT", "GPX1"
+    ]
+  }
+}

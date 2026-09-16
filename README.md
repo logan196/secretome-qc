@@ -15,6 +15,8 @@ streamlit run app.py
 
 Then open the URL Streamlit prints (typically http://localhost:8501).
 
+**Vercel / meeting URL:** Streamlit cannot run on Vercel serverless. Use the Next.js portal in [`web/`](web/README.md). Set the Vercel **Root Directory** to `web`, keep Deployment Protection on, and unlock the app with passcode `ST-266`. Do not make this repository public.
+
 **Zero-upload demo:** leave the sidebar on *Bundled demo*. The three visualization panels, verdict banners, and report download work immediately.
 
 ## What the MVP does
@@ -70,8 +72,9 @@ pytest -q
 ## Repository layout
 
 ```text
-app.py                      # Streamlit UI
+app.py                      # Streamlit UI (local only)
 secretomeqc/                # ingest, CV, PCA, pathways, report
+web/                        # Next.js portal for private Vercel deploy
 data/DEMO_PUBLIC_*.csv      # bundled demo matrix
 data/moa_gene_sets.json     # mini MoA library
 assets/                     # Novaflow + Noveome wordmarks, CSS
