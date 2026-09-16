@@ -1,0 +1,178 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@500;600&display=swap");
+
+:root {
+  --ink: #12202a;
+  --muted: #5b6b76;
+  --line: #d7e0e4;
+  --paper: #ffffff;
+  --wash: #f4f7f8;
+  --teal: #0f766e;
+  --teal-soft: #ccfbf1;
+  --indigo: #4338ca;
+  --pass: #047857;
+  --review: #b45309;
+  --fail: #b91c1c;
+}
+
+html, body, [class*="css"] {
+  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+}
+
+.stApp {
+  background:
+    radial-gradient(1200px 420px at 8% -10%, rgba(20, 184, 166, 0.16), transparent 55%),
+    radial-gradient(900px 380px at 100% 0%, rgba(79, 70, 229, 0.10), transparent 50%),
+    var(--wash);
+}
+
+#MainMenu, header[data-testid="stHeader"], footer, .stDeployButton {
+  visibility: hidden;
+  height: 0;
+}
+
+.block-container {
+  padding-top: 1.2rem;
+  max-width: 1240px;
+}
+
+.sqc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px 22px;
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(18, 32, 42, 0.05);
+  margin-bottom: 14px;
+}
+
+.sqc-brands {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.sqc-brands img,
+.sqc-brands svg {
+  height: 34px;
+  width: auto;
+  display: block;
+}
+
+.sqc-divider {
+  width: 1px;
+  height: 28px;
+  background: var(--line);
+}
+
+.sqc-title h1 {
+  font-family: "IBM Plex Serif", Georgia, serif;
+  font-size: 1.55rem;
+  margin: 0;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+.sqc-title p {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.sqc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #f6d58b;
+}
+
+.sqc-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 8px 0 18px;
+}
+
+.sqc-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+
+.sqc-card .lbl {
+  color: var(--muted);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.sqc-card .val {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-top: 4px;
+}
+
+.sqc-verdict {
+  border-radius: 14px;
+  padding: 14px 18px;
+  border: 1px solid transparent;
+  margin: 6px 0 16px;
+  font-weight: 600;
+}
+
+.sqc-verdict.pass {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+  color: #065f46;
+}
+
+.sqc-verdict.review {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
+}
+
+.sqc-verdict.fail {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+}
+
+.sqc-panel {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 8px 8px 4px;
+  margin-bottom: 14px;
+}
+
+div[data-testid="stSidebar"] {
+  background: #0b1f2a;
+}
+
+div[data-testid="stSidebar"] * {
+  color: #e8eef2 !important;
+}
+
+div[data-testid="stSidebar"] .stSelectbox div, 
+div[data-testid="stSidebar"] input {
+  color: #12202a !important;
+}
+
+@media (max-width: 900px) {
+  .sqc-header { flex-direction: column; align-items: flex-start; }
+  .sqc-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
